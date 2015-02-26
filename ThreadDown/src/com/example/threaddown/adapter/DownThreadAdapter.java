@@ -4,12 +4,10 @@ import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.List;
-
 import com.example.threaddown.R;
 import com.example.threaddown.bean.DownThreadEntity;
 import com.example.threaddown.util.DownLoadProgressListener;
 import com.example.threaddown.util.FileDownloader;
-
 import android.content.Context;
 import android.os.Environment;
 import android.os.Handler;
@@ -76,7 +74,6 @@ public class DownThreadAdapter extends BaseAdapter {
 		return position;
 	}
 
-	int i;
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
@@ -85,13 +82,14 @@ public class DownThreadAdapter extends BaseAdapter {
 		if (convertView == null) {
 			convertView = LayoutInflater.from(context).inflate(
 					R.layout.thread_item_down, null);
-			vher = new ViewHolder(convertView,position);
+			vher = new ViewHolder(convertView);
+			
 			convertView.setTag(vher);
 		} else {
 			vher = (ViewHolder) convertView.getTag();
 		}
-		i = (int) getItemId(position);
-		exprossValue(vher, getItem(i));
+		vher.setPosition(position);
+		exprossValue(vher, getItem(vher.getPosition()));
 
 		return convertView;
 	}
@@ -106,15 +104,25 @@ public class DownThreadAdapter extends BaseAdapter {
 	}
 
 	class ViewHolder {
-		private Handler handler = new UIHandler();
+		Handler handler = new UIHandler();
 		EditText netPath;
 		TextView resultText;
 		ProgressBar progressBar;
 
 		Button start;
 		Button stop;
-		int i;
-		ViewHolder(View convertView, int position) {
+		int position;
+		
+		public int getPosition() {
+			return position;
+		}
+
+		public void setPosition(int position) {
+			Log.e("Position Log", "setPosition:  ="+ position);
+			this.position = position;
+		}
+
+		ViewHolder(View convertView) {
 			netPath = (EditText) convertView
 					.findViewById(R.id.thread_item_path);
 			resultText = (TextView) convertView
@@ -126,14 +134,14 @@ public class DownThreadAdapter extends BaseAdapter {
 					.findViewById(R.id.thread_item_downloadbutton);
 			stop = (Button) convertView
 					.findViewById(R.id.thread_item_stopbutton);
-			i = position;
+		 
 			start.setOnClickListener(new OnClickListener() {
 
 				@Override
 				public void onClick(View v) {
 					// TODO Auto-generated method stub
-					Log.e("=ss=", "目前的网址 =="+getItem(i).getUrl());
-					downMusic(getItem(i).getUrl(), progressBar);
+					Log.e("Position Log", "getPosition:  ="+ position);
+					downMusic(getItem(getPosition()).getUrl());
 				}
 			});
 			stop.setOnClickListener(new OnClickListener() {
@@ -173,7 +181,7 @@ public class DownThreadAdapter extends BaseAdapter {
 			}
 		}
 
-		private void downMusic(String stPpath, ProgressBar progreessbar) {
+		private void downMusic(String stPpath) {
 			// 文件下载的链接
 			String filename = stPpath.substring(stPpath.lastIndexOf('/') + 1);
 
@@ -190,7 +198,7 @@ public class DownThreadAdapter extends BaseAdapter {
 					Environment.MEDIA_MOUNTED)) {
 				// 保存路径
 				File savDir = Environment.getExternalStorageDirectory();
-				download(stPpath, savDir, progreessbar);
+				download(stPpath, savDir);
 			} else {
 				Toast.makeText(context, "SDcard error", Toast.LENGTH_LONG)
 						.show();
@@ -204,8 +212,8 @@ public class DownThreadAdapter extends BaseAdapter {
 				task.exit();
 		}
 
-		private void download(String path, File savDir, ProgressBar progreessbar) {
-			task = new DownloadTask(path, savDir, progreessbar);
+		private void download(String path, File savDir) {
+			task = new DownloadTask(path, savDir);
 			new Thread(task).start();
 		}
 
@@ -213,13 +221,10 @@ public class DownThreadAdapter extends BaseAdapter {
 			private String strPath;
 			private File saveDir;
 			private FileDownloader loader;
-			private ProgressBar progreessbar;
 
-			public DownloadTask(String strPath, File saveDir,
-					ProgressBar progreessbar) {
+			public DownloadTask(String strPath, File saveDir) {
 				this.strPath = strPath;
 				this.saveDir = saveDir;
-				this.progreessbar = progreessbar;
 			}
 
 			/**
@@ -235,6 +240,7 @@ public class DownThreadAdapter extends BaseAdapter {
 					Message msg = new Message();
 					msg.what = PROCESSING;
 					msg.getData().putInt("size", size);
+					Log.e("Position Log", "Message size:  ="+ size);
 					handler.sendMessage(msg);
 				}
 			};
@@ -243,8 +249,8 @@ public class DownThreadAdapter extends BaseAdapter {
 					// 实例化一个文件下载器
 					loader = new FileDownloader(context, strPath, saveDir, 3);
 					// 设置进度条最大值
-					progreessbar.setMax(loader.getFileSize());
-					loader.download(downloadProgressListener);
+					 progressBar.setMax(loader.getFileSize());
+					 loader.download(downloadProgressListener);
 				} catch (Exception e) {
 					e.printStackTrace();
 					handler.sendMessage(handler.obtainMessage(FAILURE)); // 发送一条空消息对象
