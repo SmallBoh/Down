@@ -80,11 +80,11 @@ public class DownLoadThread extends Thread {
 				}
 				threadfile.close();
 				inStream.close();
-				print("Thread " + this.threadId + " download finish");
+				print("Threadwq" + this.threadId + " download finish");
 				this.finish = true;
 			} catch (Exception e) {
 				this.downLength = -1;
-				print("Thread " + this.threadId + ":" + e);
+				print("Threadwq" + this.threadId + ":" + e);
 			}
 		}
 	}

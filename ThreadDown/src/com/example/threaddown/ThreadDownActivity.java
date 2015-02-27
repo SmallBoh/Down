@@ -26,21 +26,21 @@ public class ThreadDownActivity extends Activity {
 		adapter.setList(getList());
 		listview.setAdapter(adapter);
 	}
-
+	
 	private List<DownThreadEntity> getList() {
 		List<DownThreadEntity> list = new ArrayList<DownThreadEntity>();
 		list.add(new DownThreadEntity("http://nchc.dl.sourceforge.net/project/sevenzip/7-Zip/9.20/7z920.exe"));
 		list.add(new DownThreadEntity("http://abv.cn/music/π‚ª‘ÀÍ‘¬.mp3"));
-//		list.add(new DownThreadEntity("http://abv.cn/music/∫Ï∂π.mp3"));
-//		list.add(new DownThreadEntity("http://abv.cn/music/list.php"));
-//		list.add(new DownThreadEntity("http://filelx.liqucn.com/upload/2014/jiaotong/didi_psnger_test4_93_v361_84.ptada"));
-//		list.add(new DownThreadEntity("http://filelx.liqucn.com/upload/2014/anquan/12-25-360MobileSafe.ptada"));
- 		list.add(new DownThreadEntity("http://filelx.liqucn.com/upload/2015/xiuxian/Fish_2_MSG3PART_0205_1.2_3.liqu_300008764409_220012314.ptada"));
-  		list.add(new DownThreadEntity("http://filelx.liqucn.com/upload/2015/qipai/KuaiLeZhaNiMei_liqu001.ptada"));
- 		list.add(new DownThreadEntity("http://filelx.liqucn.com/upload/2015/qipai/qyw_1.4.3_mm_0205_300008286790_2200126314.ptada"));
- 		list.add(new DownThreadEntity("http://filelx.liqucn.com/upload/2014/dongzuo/39_0112_xiongda_liqu_3_cm4he1_hPqdsI_300008139114_2200126314_signed.ptada"));
-		
-		list.add(new DownThreadEntity("http://filelx.liqucn.com/upload/2012/qipai/DDZ_V1.8.4_29015_VC40_8139_001.ptada"));
+		list.add(new DownThreadEntity("http://abv.cn/music/∫Ï∂π.mp3"));
+		list.add(new DownThreadEntity("http://abv.cn/music/list.php"));
+ 		list.add(new DownThreadEntity("http://filelx.liqucn.com/upload/2014/jiaotong/didi_psnger_test4_93_v361_84.ptada"));
+  	 	list.add(new DownThreadEntity("http://filelx.liqucn.com/upload/2014/anquan/12-25-360MobileSafe.ptada"));
+//   	list.add(new DownThreadEntity("http://filelx.liqucn.com/upload/2015/xiuxian/Fish_2_MSG3PART_0205_1.2_3.liqu_300008764409_220012314.ptada"));
+//  	list.add(new DownThreadEntity("http://filelx.liqucn.com/upload/2015/qipai/KuaiLeZhaNiMei_liqu001.ptada"));
+// 		list.add(new DownThreadEntity("http://filelx.liqucn.com/upload/2015/qipai/qyw_1.4.3_mm_0205_300008286790_2200126314.ptada"));
+// 		list.add(new DownThreadEntity("http://filelx.liqucn.com/upload/2014/dongzuo/39_0112_xiongda_liqu_3_cm4he1_hPqdsI_300008139114_2200126314_signed.ptada"));
+//		
+//		list.add(new DownThreadEntity("http://filelx.liqucn.com/upload/2012/qipai/DDZ_V1.8.4_29015_VC40_8139_001.ptada"));
 		return list;
 	}
 

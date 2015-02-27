@@ -125,6 +125,7 @@ public class FileDownloader {
 
 			if (conn.getResponseCode() == 200) { // 响应成功
 				this.fileSize = conn.getContentLength();// 根据响应获取文件大小
+				 
 				if (this.fileSize <= 0)
 					throw new RuntimeException("Unkown file size ");
 
@@ -137,6 +138,7 @@ public class FileDownloader {
 					for (Map.Entry<Integer, Integer> entry : logdata.entrySet())
 						data.put(entry.getKey(), entry.getValue());// 把各条线程已经下载的数据长度放入data中
 				}
+				 
 				if (this.data.size() == this.threads.length) {// 下面计算所有线程已经下载的数据总长度
 					for (int i = 0; i < this.threads.length; i++) {
 						this.downloadSize += this.data.get(i + 1);
@@ -155,7 +157,10 @@ public class FileDownloader {
 			throw new RuntimeException("don't connection this url");
 		}
 	}
-
+	
+	
+	
+	
 	/**
 	 * 获取文件名
 	 */
@@ -193,7 +198,9 @@ public class FileDownloader {
 	 * @return 已下载文件大小
 	 * @throws Exception
 	 */
+	int w;
 	public int download(DownLoadProgressListener listener) throws Exception {
+		w++;
 		try {
 			RandomAccessFile randOut = new RandomAccessFile(this.saveFile, "rw");
 			if (this.fileSize > 0)
@@ -207,14 +214,14 @@ public class FileDownloader {
 				}
 				this.downloadSize = 0;
 			}
-			for (int i = 0; i < this.threads.length; i++) {// 开启线程进行下载
+ 			for (int i = 0; i < this.threads.length; i++) {// 开启线程进行下载
 				int downLength = this.data.get(i + 1);
 				if (downLength < this.block
 						&& this.downloadSize < this.fileSize) {// 判断线程是否已经完成下载,否则继续下载
 					this.threads[i] = new DownLoadThread(this, url,
 							this.saveFile, this.block, this.data.get(i + 1),
 							i + 1);
-					this.threads[i].setPriority(7); // 设置线程优先级
+					this.threads[i].setPriority(3); // 设置线程优先级
 					this.threads[i].start();
 				} else {
 					this.threads[i] = null;
@@ -249,7 +256,9 @@ public class FileDownloader {
 		}
 		return this.downloadSize;
 	}
-
+	
+	
+	
 	/**
 	 * 获取Http响应头字段
 	 * 
@@ -270,7 +279,6 @@ public class FileDownloader {
 
 	/**
 	 * 打印Http头字段
-	 * 
 	 * @param http
 	 */
 	public static void printResponseHeader(HttpURLConnection http) {
