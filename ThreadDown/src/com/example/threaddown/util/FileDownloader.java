@@ -230,6 +230,7 @@ public class FileDownloader {
 			fileService.delete(this.downloadUrl);// 如果存在下载记录，删除它们，然后重新添加
 			fileService.save(this.downloadUrl, this.data);
 			boolean notFinish = true;// 下载未完成
+			int k;
 			while (notFinish) {// 循环判断所有线程是否完成下载
 				Thread.sleep(900);
 				notFinish = false;// 假定全部线程下载完成
@@ -242,6 +243,7 @@ public class FileDownloader {
 									this.data.get(i + 1), i + 1);
 							this.threads[i].setPriority(7);
 							this.threads[i].start();
+							 
 						}
 					}
 				}

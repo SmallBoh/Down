@@ -33,7 +33,7 @@ public class DownLoadThread extends Thread {
 		this.threadId = threadId;
 		this.downLength = downLength;
 	}
-
+	
 	@Override
 	public void run() {
 		if (downLength < block) {// 未下载完成
@@ -66,8 +66,8 @@ public class DownLoadThread extends Thread {
 				print("Thread " + this.threadId
 						+ " start download from position " + startPos);
 				// 随机访问文件
-				RandomAccessFile threadfile = new RandomAccessFile(
-						this.saveFile, "rwd");
+			 	RandomAccessFile threadfile = new RandomAccessFile(
+						this.saveFile, "rwd"); 
 				// 定位到pos位置
 				threadfile.seek(startPos);
 				while (!downloader.getExit()
@@ -88,11 +88,11 @@ public class DownLoadThread extends Thread {
 			}
 		}
 	}
-
+	
 	private static void print(String msg) {
 		Log.i(TAG, msg);
 	}
-
+	
 	/**
 	 * 下载是否完成
 	 * 
@@ -110,5 +110,7 @@ public class DownLoadThread extends Thread {
 	public long getDownLength() {
 		return downLength;
 	}
+	
+	
 	
 }
