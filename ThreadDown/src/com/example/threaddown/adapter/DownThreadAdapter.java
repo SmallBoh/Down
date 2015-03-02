@@ -15,8 +15,6 @@ import android.content.Context;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-import android.sax.StartElementListener;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -89,20 +87,23 @@ public class DownThreadAdapter extends BaseAdapter {
 		}
 
 		DownThreadEntity threadEntity = getItem(position);
-
 		exprossValue(vher, threadEntity);
+		
+		
+		DownLoadLinener downLoadLinener = new DownLoadLinener(vher, position,
+				threadEntity);
 
-		vher.start.setOnClickListener(new DownLoadLinener(vher, position,
-				threadEntity));
-		vher.stop.setOnClickListener(new DownLoadLinener(vher, position,
-				threadEntity));
+		vher.start.setOnClickListener(downLoadLinener);
+		vher.stop.setOnClickListener(downLoadLinener);
+
+		 
 
 		return convertView;
 	}
 
 	private static final int PROCESSING = 1;
 	private static final int FAILURE = -1;
-	
+
 	private void exprossValue(ViewHolder vher, DownThreadEntity entity) {
 
 		if (entity.getUrl() != null) {
@@ -129,6 +130,15 @@ public class DownThreadAdapter extends BaseAdapter {
 		ProgressBar progressBar;
 		Button start;
 		Button stop;
+		Handler handlerLinner;
+
+		public Handler getHandlerLinner() {
+			return handlerLinner;
+		}
+
+		public void setHandlerLinner(Handler handlerLinner) {
+			this.handlerLinner = handlerLinner;
+		}
 
 		ViewHolder(View convertView) {
 			initView(convertView);
@@ -141,93 +151,15 @@ public class DownThreadAdapter extends BaseAdapter {
 					.findViewById(R.id.thread_item_resultView);
 			progressBar = (ProgressBar) convertView
 					.findViewById(R.id.thread_item_progressBar);
+
 			start = (Button) convertView
 					.findViewById(R.id.thread_item_downloadbutton);
 			stop = (Button) convertView
 					.findViewById(R.id.thread_item_stopbutton);
-		}
-		
-		
-	}
 
-	DownRemove remove = new DownRemove() {
-		@Override
-		public void onCompleteListRemove(int position) {
-			// TODO Auto-generated method stub
-			getList().remove(position);
-			notifyDataSetChanged();
-		}
-	};
-	
-	public void addItem(String url) {
-
-		// uh.obtainMessage(NOTIFIT_CHANGE_ADTA, new MessageFormat(url));
-
-	}
-
-	private class DownLoadLinener implements OnClickListener {
-
-		private ViewHolder holder;
-		private int position;
-		private DownThreadEntity entity;
-		private Handler handlerLinner = new Handler() {
-			public void handleMessage(Message msg) {
-				switch (msg.what) {
-
-				case PROCESSING: // 更新进度
-					isDownFinish(remove, msg);
-					break;
-				case FAILURE: // 下载失败
-					Toast.makeText(context, "下载失败", Toast.LENGTH_LONG).show();
-					break;
-				}
-			};
-
-		};
-
-		public void isDownFinish(DownRemove onRemove, Message msg) {
-
-			entity.setProgress(msg.getData().getInt("size") + "");
-			holder.progressBar
-					.setProgress(Integer.valueOf(entity.getProgress()));
-
-			float num = (float) Integer.valueOf(entity.getProgress())
-					/ (float) holder.progressBar.getMax();
-			int result = (int) (num * 100); // 计算进度
-
-			entity.setResultText(result + "%");
-			holder.resultText.setText(entity.getResultText());
-			entity.setLoading(true);
-			notifyDataSetChanged();
-			if (holder.progressBar.getProgress() == holder.progressBar.getMax()) {
-				// 下载完成
-				onRemove.onCompleteListRemove((Integer) holder.progressBar
-						.getTag());
-			}
 		}
 
-		public DownLoadLinener(ViewHolder holder, int position,
-
-		DownThreadEntity entity) {
-			super();
-			this.holder = holder;
-			this.position = position;
-			this.entity = entity;
-		}
-		
-		@Override
-		public void onClick(View v) {
-
-			switch (v.getId()) {
-			case R.id.thread_item_downloadbutton:
-				downMusic(entity.getUrl());
-				holder.progressBar.setTag(position);
-				break;
-			case R.id.thread_item_stopbutton:
-				exit();
-				break;
-			}
-		}
+		private DownloadTask task;
 
 		public void downMusic(String stPpath) {
 			// 文件下载的链接
@@ -253,17 +185,100 @@ public class DownThreadAdapter extends BaseAdapter {
 			}
 		}
 
-		private DownloadTask task;
-
 		private void download(String path, File savDir) {
-			task = new DownloadTask(path, savDir, handlerLinner,
-					holder.progressBar);
+
+			task = new DownloadTask(path, savDir, getHandlerLinner(),
+					progressBar);
 			new Thread(task).start();
 		}
 
 		public void exit() {
 			if (task != null)
 				task.exit();
+		}
+
+	}
+
+	DownRemove remove = new DownRemove() {
+		@Override
+		public void onCompleteListRemove(int position) {
+			// TODO Auto-generated method stub
+			getList().remove(position);
+			notifyDataSetChanged();
+		}
+	};
+
+	public void addItem(String url) {
+
+		// uh.obtainMessage(NOTIFIT_CHANGE_ADTA, new MessageFormat(url));
+
+	}
+
+	private class DownLoadLinener implements OnClickListener {
+
+		private ViewHolder holder;
+		private int position;
+		private DownThreadEntity entity;
+
+		private Handler handlerLinner = new Handler() {
+
+			public void handleMessage(Message msg) {
+				switch (msg.what) {
+
+				case PROCESSING: // 更新进度
+					isDownFinish(remove, msg);
+					break;
+				case FAILURE: // 下载失败
+					Toast.makeText(context, "下载失败", Toast.LENGTH_LONG).show();
+					break;
+				}
+
+			};
+
+			public void isDownFinish(DownRemove onRemove, Message msg) {
+
+				entity.setProgress(msg.getData().getInt("size") + "");
+				holder.progressBar.setProgress(Integer.valueOf(entity
+						.getProgress()));
+				float num = (float) Integer.valueOf(entity.getProgress())
+						/ (float) holder.progressBar.getMax();
+				int result = (int) (num * 100); // 计算进度
+
+				entity.setResultText(result + "%");
+				holder.resultText.setText(entity.getResultText());
+				entity.setLoading(true);
+				notifyDataSetChanged();
+				if (holder.progressBar.getProgress() == holder.progressBar
+						.getMax()) {
+					// 下载完成
+					onRemove.onCompleteListRemove((Integer) holder.progressBar
+							.getTag());
+				}
+			}
+		};
+
+		public DownLoadLinener(ViewHolder holder, int position,
+				DownThreadEntity entity) {
+			super();
+			this.holder = holder;
+			this.position = position;
+			this.entity = entity;
+			holder.setHandlerLinner(handlerLinner);
+		}
+		
+		@Override
+		public void onClick(View v) {
+			// TODO Auto-generated method stub
+			switch (v.getId()) {
+			case R.id.thread_item_downloadbutton:
+				holder.downMusic(entity.getUrl());
+				holder.progressBar.setTag(position);
+				break;
+
+			case R.id.thread_item_stopbutton:
+				holder.exit();
+				break;
+			}
 		}
 	}
 
@@ -299,6 +314,7 @@ public class DownThreadAdapter extends BaseAdapter {
 				msg.getData().putInt("size", size);
 				hand.sendMessage(msg);
 			}
+
 		};
 
 		public void run() {

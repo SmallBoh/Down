@@ -19,7 +19,7 @@ public class ThreadDownActivity extends Activity implements OnClickListener {
 	private DownThreadAdapter adapter;
 
 	private Button addItem;
-
+	List<DownThreadEntity> list = new ArrayList<DownThreadEntity>();
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -27,17 +27,8 @@ public class ThreadDownActivity extends Activity implements OnClickListener {
 		setContentView(R.layout.fragment_main);
 		listview = (ListView) findViewById(R.id.listview);
 		addItem = (Button) findViewById(R.id.fragment_button_add);
-		// initView();
-		/*
-		 * new AbsListView.RecyclerListener() {
-		 * 
-		 * @Override public void onMovedToScrapHeap(View view) { // TODO
-		 * Auto-generated method stub
-		 * 
-		 * } };
-		 */
 		adapter = new DownThreadAdapter(ThreadDownActivity.this);
-		adapter.setList(getList());
+		adapter.setList(list);
 		listview.setAdapter(adapter);
 		addItem.setOnClickListener(this);
 	}
@@ -71,12 +62,11 @@ public class ThreadDownActivity extends Activity implements OnClickListener {
 	@Override
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
-		adapter.addItem(getList().get(urlIndex).getUrl());
-
-		urlIndex++;
-		if (urlIndex >= getList().size()) {
-			urlIndex = 0;
-		}
+	
+		list.add(new DownThreadEntity("http://filelx.liqucn.com/upload/2012/qipai/DDZ_V1.8.4_29015_VC40_8139_001.ptada"));
+		adapter.setList(list);
+		adapter.notifyDataSetChanged();
+ 
 	}
 
 }

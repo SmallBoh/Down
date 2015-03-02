@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
-     <TextView
+
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/path" />
@@ -20,6 +21,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal" >
+
+        <!--
+             <ToggleButton
+            android:id="@+id/thread_item_downloadbutton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="开始下载" >
+        </ToggleButton>
+        -->
 
         <Button
             android:id="@+id/thread_item_downloadbutton"
@@ -45,4 +55,5 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center" />
+
 </LinearLayout>

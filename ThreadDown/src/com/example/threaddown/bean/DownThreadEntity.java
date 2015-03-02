@@ -9,9 +9,6 @@ public class DownThreadEntity implements Serializable {
 	private String resultText;
 	private boolean loading;
 	
-	
-	
-
 	public boolean isLoading() {
 		return loading;
 	}
