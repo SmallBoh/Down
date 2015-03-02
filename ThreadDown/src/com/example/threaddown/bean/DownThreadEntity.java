@@ -5,7 +5,36 @@ import java.io.Serializable;
 @SuppressWarnings("serial")
 public class DownThreadEntity implements Serializable {
 	private String url;
-	//private String progress;
+	private String progress;
+	private String resultText;
+	private boolean loading;
+	
+	
+	
+
+	public boolean isLoading() {
+		return loading;
+	}
+
+	public void setLoading(boolean loading) {
+		this.loading = loading;
+	}
+
+	public DownThreadEntity(String url) {
+		super();
+		this.url = url;
+	}
+
+	public DownThreadEntity(String url, String progress, String resultText) {
+		super();
+		this.url = url;
+		this.progress = progress;
+		this.resultText = resultText;
+	}
+
+	public DownThreadEntity() {
+		super();
+	}
 
 	public String getUrl() {
 		return url;
@@ -14,9 +43,8 @@ public class DownThreadEntity implements Serializable {
 	public void setUrl(String url) {
 		this.url = url;
 	}
-	
 
-	/*public String getProgress() {
+	public String getProgress() {
 		return progress;
 	}
 
@@ -24,29 +52,18 @@ public class DownThreadEntity implements Serializable {
 		this.progress = progress;
 	}
 
-	public DownThreadEntity(String url, String progress) {
-		super();
-		this.url = url;
-		this.progress = progress;
-	}*/
-
-	public DownThreadEntity(String url) {
-		super();
-		this.url = url;
+	public String getResultText() {
+		return resultText;
 	}
 
-	public DownThreadEntity() {
-		super();
+	public void setResultText(String resultText) {
+		this.resultText = resultText;
 	}
 
 	@Override
 	public String toString() {
-		return "DownThreadEntity [url=" + url + "]";
+		return "DownThreadEntity [url=" + url + ", progress=" + progress
+				+ ", resultText=" + resultText + "]";
 	}
-	
-/*	@Override
-	public String toString() {
-		return "DownThreadEntity [url=" + url + ", progress=" + progress + "]";
-	}*/
 
 }
